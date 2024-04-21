@@ -5,6 +5,7 @@ import ma.enset.patientsdemo.repositories.ConsultationRepository;
 import ma.enset.patientsdemo.repositories.MedecinRepository;
 import ma.enset.patientsdemo.repositories.PatientRepository;
 import ma.enset.patientsdemo.repositories.RendezVousRepository;
+import ma.enset.patientsdemo.service.IHospitalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,10 +29,10 @@ public class PatientsDemoApplication{
         SpringApplication.run(PatientsDemoApplication.class, args);
     }
     @Bean
-    CommandLineRunner start(PatientRepository patientRepository,
+    CommandLineRunner start(IHospitalService hospitalService,
+                            PatientRepository patientRepository,
                             MedecinRepository medecinRepository,
-                            RendezVousRepository rendezVousRepository,
-                            ConsultationRepository consultationRepository){
+                            RendezVousRepository rendezVousRepository){
         return args -> {
             Stream.of("Ahmed","Hassan","Aymane").
                     forEach(name->{
@@ -40,7 +41,7 @@ public class PatientsDemoApplication{
                         patient.setDateNaissance(new Date());
                         patient.setScore(152);
                         patient.setMalade(false);
-                        patientRepository.save(patient);
+                        hospitalService.savePatient(patient);
                     });
             Stream.of("Mohamed","Anass","Khadija").
                     forEach(name->{
@@ -48,7 +49,7 @@ public class PatientsDemoApplication{
                         medecin.setNom(name);
                         medecin.setEmail(name+"@gmail.com");
                         medecin.setSpecialite(Math.random()>0.5?"Cardio":"Dentiste");
-                        medecinRepository.save(medecin);
+                        hospitalService.saveMedecin(medecin);
                     });
             Patient patient=patientRepository.findById(1L).orElse(null);
             Patient patient1=patientRepository.findPatientByNom("Hassan");
@@ -60,7 +61,7 @@ public class PatientsDemoApplication{
             rendezVous.setStatus(StatusRDV.PENDING);
             rendezVous.setMedecin(medecin);
             rendezVous.setPatient(patient1);
-            rendezVousRepository.save(rendezVous);
+            hospitalService.saveRDV(rendezVous);
 
             RendezVous rendezVous1=rendezVousRepository.findById(1L).orElse(null);
 
@@ -68,7 +69,7 @@ public class PatientsDemoApplication{
             consultation.setDateConsultation(new Date());
             consultation.setRendezVous(rendezVous1);
             consultation.setRapport("Rapport de consultation......");
-            consultationRepository.save(consultation);
+            hospitalService.saveConsultation(consultation);
 
         };
     }
