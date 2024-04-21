@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PatientRepository extends JpaRepository<Patient,Long> {
-    public List<Patient> findByMalade(boolean m);
-    Page<Patient> findByMalade(boolean m, Pageable pageable);
+//    public List<Patient> findByMalade(boolean m);
+//    Page<Patient> findByMalade(boolean m, Pageable pageable);
+    Patient findPatientByNom(String name);
 }
